@@ -1,4 +1,4 @@
-using System.Collections;
+Ôªøusing System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,8 +8,8 @@ public class FishGameResult : MonoBehaviour
     [SerializeField] private TMP_Text fishNameText;
     [SerializeField] private TMP_Text fishPointText;
 
-    string[] randomObjArr = new string[100];    // ∑£¥˝ obj πËø≠
-    string[] objName = new string[] { "fish1", "fish2", "fish3", "fish4", "jelly", "recycle1", "recycle2", "recycle3" }; // 8∞≥ : π∞∞Ì±‚4, ¡©∏Æ1, ∏ÆªÁ¿Ã≈¨3
+    string[] randomObjArr = new string[100];    // ÎûúÎç§ obj Î∞∞Ïó¥
+    string[] objName = new string[] { "fish1", "fish2", "fish3", "fish4", "jelly", "recycle1", "recycle2", "recycle3" }; // 8Í∞ú : Î¨ºÍ≥†Í∏∞4, Ï†§Î¶¨1, Î¶¨ÏÇ¨Ïù¥ÌÅ¥3
     Dictionary<string, List<int>> objPointDict = new Dictionary<string, List<int>>();
 
     int point = 0;
@@ -24,7 +24,7 @@ public class FishGameResult : MonoBehaviour
     void SetRandomObjArray()
     {
         string[] tempRandomObjArr = new string[100];
-        // πËø≠ ª˝º∫
+        // Î∞∞Ïó¥ ÏÉùÏÑ±
         for (int i = 0; i < 5; i++)
         {
             tempRandomObjArr[i] = objName[0];
@@ -58,10 +58,10 @@ public class FishGameResult : MonoBehaviour
             tempRandomObjArr[i] = objName[7];
         }
         randomObjArr = tempRandomObjArr;
-        // πËø≠ ºØæÓ¡÷±‚
+        // Î∞∞Ïó¥ ÏÑûÏñ¥Ï£ºÍ∏∞
         for(int i = 0; i<10000; i++)
         {
-            // random indexµŒ ∞≥¿« ∞™ swap
+            // random indexÎëê Í∞úÏùò Í∞í swap
             int index1 = Random.Range(0, 100);
             int index2 = Random.Range(0, 100);
 
@@ -69,7 +69,7 @@ public class FishGameResult : MonoBehaviour
             randomObjArr[index1] = randomObjArr[index2];
             randomObjArr[index2] = tempNum;
         }
-        // √‚∑¬
+        // Ï∂úÎ†•
         for(int i = 0; i<randomObjArr.Length; i++)
         {
             Debug.Log(randomObjArr[i]);
@@ -100,16 +100,16 @@ public class FishGameResult : MonoBehaviour
         num++;
         Debug.Log("----------------------" + num);
 
-        // ∑£¥˝¿∏∑Œ ªÃ±‚
+        // ÎûúÎç§ÏúºÎ°ú ÎΩëÍ∏∞
         int randomNum = Random.Range(0, 100);
-        // ¿Ã∏ß
+        // Ïù¥Î¶Ñ
         string objName = randomObjArr[randomNum].ToString();
         Dictionary<string, List<int>> tempObjPointDict = objPointDict;
-        // ∆˜¿Œ∆Æ
+        // Ìè¨Ïù∏Ìä∏
         List<int> objPoint = tempObjPointDict[objName];
         int objPointNum = Random.Range(objPoint[0], objPoint[1]) / 5;
         point = objPointNum * 5;
-        // √‚∑¬
+        // Ï∂úÎ†•
         fishNameText.text = objName;
         fishPointText.text = point.ToString();
     }
