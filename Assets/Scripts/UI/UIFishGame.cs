@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,7 +31,7 @@ public class UIFishGame : MonoBehaviour
         SetBtnListener();
     }
 
-    // ¹Ì³¢°¡ ¾øÀ» °æ¿ì 
+    // ë¯¸ë¼ê°€ ì—†ì„ ê²½ìš° ê²Œì„ ìŠ¤íƒ€íŠ¸ í™”ë©´ ë³´ì—¬ì£¼ê¸° 
     void GameReStart()
     {
         startBaitText.text = baitNum.ToString();
@@ -41,20 +41,20 @@ public class UIFishGame : MonoBehaviour
 
     void SetBtnListener()
     {
-        // °ÔÀÓ½ÃÀÛ ¹öÆ°
+        // ê²Œì„ì‹œì‘ ë²„íŠ¼
         gameStartBtn.onClick.AddListener(() => 
         {
             ChangeRect(gameStartRect, gamePlayRect);
             SetBaitAndPoint(baitNum, pointNum);
         });
 
-        // °ÔÀÓ Á¾·á ¹öÆ°
+        // ê²Œì„ ì¢…ë£Œ ë²„íŠ¼
         gameExitBtn.onClick.AddListener(() =>
         {
             Destroy(gameObject);
         });
 
-        // Ä³½ºÆ® ¹öÆ°
+        // ìºìŠ¤íŠ¸ ë²„íŠ¼
         castBtn.onClick.AddListener(OnClickCastBtn);
     }
 
@@ -72,7 +72,7 @@ public class UIFishGame : MonoBehaviour
             castBtn.enabled = true;
             resultRect.gameObject.SetActive(false);
             
-            // ¹Ì³¢°¡ ¾øÀ¸¸é °ÔÀÓ ½ºÅ¸Æ® È­¸éÀ¸·Î ÀÌµ¿
+            // ë¯¸ë¼ê°€ ì—†ìœ¼ë©´ ê²Œì„ ìŠ¤íƒ€íŠ¸ í™”ë©´ìœ¼ë¡œ ì´ë™
             if(baitNum == 0)
             {
                 GameReStart();
