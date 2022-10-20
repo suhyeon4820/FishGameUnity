@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -17,6 +17,25 @@ public class FishGameResult : MonoBehaviour
     int num = 0;
     private void Awake()
     {
+        {
+            ResultItem item = new ResultItem(ResultItem.ItemType.Fish, "물고기 1", 20, 20, 50);
+        }
+
+        {
+            ResultItem item = new ResultItem(ResultItem.ItemType.Fish, "물고기 2", 10, 30, 60);
+        }
+
+        {
+            ResultItem item = new ResultItem(ResultItem.ItemType.Fish, "물고기 3", 20, 50, 100);
+        }
+
+        {
+            ResultItem item = new ResultItem(ResultItem.ItemType.Point, "포인트", 15, 20, 20);
+        }
+
+        
+
+
         SetRandomObjArray();
         SetObjPointDict();
     }
@@ -109,6 +128,9 @@ public class FishGameResult : MonoBehaviour
         List<int> objPoint = tempObjPointDict[objName];
         int objPointNum = Random.Range(objPoint[0], objPoint[1]) / 5;
         point = objPointNum * 5;
+
+        ResultItem item = new ResultItem(ResultItem.ItemType.Fish, "물고기 3", 260, 50, 100);
+        
         // 출력
         fishNameText.text = objName;
         fishPointText.text = point.ToString();
@@ -117,5 +139,38 @@ public class FishGameResult : MonoBehaviour
     public int ReturnPoint()
     {
         return point;
+    }
+}
+
+class ResultItem {
+
+    public enum ItemType
+    {
+        Fish,
+        Point,
+        Trash
+    }
+
+    public ItemType Type {get;}
+
+    public float Rate { get; }
+    
+    public string Name { get; }
+
+    public float MinScore { get; }
+    public float MaxScore { get; }
+
+    public ResultItem(ItemType type, string name, float rate, float minScore, float maxScore) {
+        Type = type;
+        Rate = rate;
+        Name = name;
+        MinScore = minScore;
+        MaxScore = maxScore;
+    }
+
+    public float GetScore() {
+        float objPointNum = Random.Range(MinScore, MaxScore) / 5;
+
+        return objPointNum;
     }
 }
