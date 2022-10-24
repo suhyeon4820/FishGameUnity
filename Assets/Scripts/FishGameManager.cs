@@ -60,17 +60,19 @@ public class FishGameManager : MonoBehaviour
 
         // 아이템 랜덤 생성
         FishItem randomItem = null;
+        // 가중치    : 물고기1(5%) | 물고기2(10%) | 물고기3(20%) | 물고기4(40%) | 젤리(10%) | 재활용1(5%) | 재활용2(5%) | 재활용3(5%) | 
+        // 가중치 합 : 물고기1(5%) | 물고기2(15%) | 물고기3(35%) | 물고기4(75%) | 젤리(85%) | 재활용1(90%) | 재활용2(95%) | 재활용3(100%) |
         List<FishItem> randomItemList = gameItemList;
 
-        // 가중치 랜덤 뽑기 
+        // 가중치 랜덤 뽑기 - 각각의 요소가 뽑힐 확률 : (가중치) / (전체 가중치 합)
         int weight = 0;
-        int selectNum = 0;
-        selectNum = Mathf.RoundToInt(Random.Range(0.01f, 1f) * 100);
+        int selectNum = Mathf.RoundToInt(Random.Range(0.01f, 1f) * 100); // 1 ~ 99
         
         for (int i =0; i< randomItemList.Count;i++)
         {
-            weight += randomItemList[i].rate;
-            if(selectNum<=weight)
+            weight += randomItemList[i].rate; // 가중치 합
+            
+            if(selectNum<=weight) // 가중치가 선택한 수 이내에 있으면 선택
             {
                 randomItem = randomItemList[i];
                 break;
