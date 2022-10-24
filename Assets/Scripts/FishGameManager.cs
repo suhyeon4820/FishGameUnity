@@ -127,6 +127,7 @@ public class FishGameManager : MonoBehaviour
 
         return randomItem;
     }
+
     public void RewardRecycleItem()
     {
         Recycle--;      // 수량 감소
