@@ -15,11 +15,16 @@ public class UIFishGame : MonoBehaviour
     [SerializeField] private RectTransform gamePlayRect;
     [SerializeField] private Button castBtn;
     [SerializeField] private Button gameExitBtn;
+    [SerializeField] private Button rewardBtn;
     [SerializeField] private TMP_Text baitText;
     [SerializeField] private TMP_Text pointText;
+    [SerializeField] private TMP_Text recycleText;
 
     [Header("Result")]
     [SerializeField] private RectTransform resultRect;
+    [SerializeField] Image itemImage;
+    [SerializeField] Sprite[] itemImages;
+    [SerializeField] Image comboImage;
     [SerializeField] private TMP_Text itemNameText;
     [SerializeField] private TMP_Text itemPointText;
     [SerializeField] private Button okBtn;
@@ -27,8 +32,8 @@ public class UIFishGame : MonoBehaviour
     void Start()
     {
         SetBtnListener();
+        fishGameManager.onComboAction += ShowComboEffect;   // action
     }
-
 
     void SetBtnListener()
     {
@@ -47,6 +52,13 @@ public class UIFishGame : MonoBehaviour
 
         // 캐스트 버튼
         castBtn.onClick.AddListener(OnClickCastBtn);
+
+        // 리사이클 보상 버튼
+        rewardBtn.onClick.AddListener(() =>
+        {
+            fishGameManager.RewardRecycleItem();
+            UpdateRecycleAndPointUI();
+        });
     }
 
     void OnClickCastBtn()
@@ -54,10 +66,12 @@ public class UIFishGame : MonoBehaviour
         castBtn.enabled = false;
         resultRect.gameObject.SetActive(true);
 
-        // 랜덤 아이템 확인
-        fishGameManager.SpawnRandomItem();  
-        ShowItemResult();
-
+        // 랜덤 아이템 생성
+        fishGameManager.StartFishing((fish)=>
+        {
+            ShowItemResult(fish);
+        });  
+        
         okBtn.onClick.AddListener(() =>
         {
             castBtn.enabled = true;
@@ -71,11 +85,22 @@ public class UIFishGame : MonoBehaviour
         startBaitText.text = fishGameManager.Bait.ToString();
     }
 
-    void ShowItemResult()
+    void ShowItemResult(FishItem fish)
     {
-        // 획득한 아이템 이름 포인트 표시
-        itemNameText.text = fishGameManager.getFishItem.name;
-        itemPointText.text = fishGameManager.currentPoint.ToString();
+        itemNameText.text = fish.name;   
+        itemImage.sprite = itemImages[fish.imageIndex];
+
+        // 리사이클일 경우 포인트 대신 eco 작성
+        if(fish.type == FishItemType.recycle)
+        {
+            itemPointText.text = "eco";
+            UpdateRecycleAndPointUI();
+        }
+        else
+        {
+            itemPointText.text = fish.randomPoint.ToString();
+        }
+            
         UpdateBaitAndPointUI();
     }
 
@@ -84,6 +109,18 @@ public class UIFishGame : MonoBehaviour
         // 남은 미끼, 총 포인트 표시
         baitText.text = string.Format("X{0}", fishGameManager.Bait.ToString() );
         pointText.text = string.Format("X{0}", fishGameManager.Point.ToString());
+    }
+
+    void UpdateRecycleAndPointUI()
+    {
+        // 리사이클 수 보상 포인트 업데이트
+        recycleText.text = fishGameManager.Recycle.ToString();
+        pointText.text = string.Format("X{0}", fishGameManager.Point.ToString());
+    }
+
+    void ShowComboEffect(bool isTrue)
+    {
+        comboImage.gameObject.SetActive(isTrue);
     }
 
     void ChangeGameUI()
