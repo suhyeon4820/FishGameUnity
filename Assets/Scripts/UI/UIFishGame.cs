@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 public class UIFishGame : MonoBehaviour
 {
-    [SerializeField] private FishGameResult gameResult;
+    [SerializeField] private FishGameManager fishGameManager;
     [Header("GameStart")]
     [SerializeField] private RectTransform gameStartRect;
     [SerializeField] private Button gameStartBtn;
@@ -20,32 +20,23 @@ public class UIFishGame : MonoBehaviour
 
     [Header("Result")]
     [SerializeField] private RectTransform resultRect;
+    [SerializeField] private TMP_Text itemNameText;
+    [SerializeField] private TMP_Text itemPointText;
     [SerializeField] private Button okBtn;
-
-    private int baitNum = 4;
-    private int pointNum = 0;
-
 
     void Start()
     {
         SetBtnListener();
     }
 
-    // 미끼가 없을 경우 게임 스타트 화면 보여주기 
-    void GameReStart()
-    {
-        startBaitText.text = baitNum.ToString();
-        ChangeRect(gamePlayRect, gameStartRect);
-        gameStartBtn.enabled = false;   
-    }
 
     void SetBtnListener()
     {
         // 게임시작 버튼
         gameStartBtn.onClick.AddListener(() => 
         {
-            ChangeRect(gameStartRect, gamePlayRect);
-            SetBaitAndPoint(baitNum, pointNum);
+            fishGameManager.UpdateGgameState(GameState.start);
+            ChangeGameUI();
         });
 
         // 게임 종료 버튼
@@ -61,34 +52,62 @@ public class UIFishGame : MonoBehaviour
     void OnClickCastBtn()
     {
         castBtn.enabled = false;
-        resultRect.gameObject.SetActive(true);  
+        resultRect.gameObject.SetActive(true);
 
-        baitNum--;
-        pointNum += gameResult.ReturnPoint();
-        SetBaitAndPoint(baitNum, pointNum);
+        // 랜덤 아이템 확인
+        fishGameManager.SpawnRandomItem();  
+        ShowItemResult();
 
         okBtn.onClick.AddListener(() =>
         {
             castBtn.enabled = true;
             resultRect.gameObject.SetActive(false);
-            
-            // 미끼가 없으면 게임 스타트 화면으로 이동
-            if(baitNum == 0)
-            {
-                GameReStart();
-            }
+            ChangeGameUI();
         });
     }
 
-    void SetBaitAndPoint(int baitNum, int pointNum)
+    void SetGameStartUI()
     {
-        baitText.text = string.Format("X{0}", baitNum);
-        pointText.text = string.Format("X{0}", pointNum);
+        startBaitText.text = fishGameManager.Bait.ToString();
     }
 
-    void ChangeRect(RectTransform hide, RectTransform show)
+    void ShowItemResult()
     {
-        hide.gameObject.SetActive(false);
-        show.gameObject.SetActive(true);
+        // 획득한 아이템 이름 포인트 표시
+        itemNameText.text = fishGameManager.getFishItem.name;
+        itemPointText.text = fishGameManager.currentPoint.ToString();
+        UpdateBaitAndPointUI();
+    }
+
+    void UpdateBaitAndPointUI()
+    {
+        // 남은 미끼, 총 포인트 표시
+        baitText.text = string.Format("X{0}", fishGameManager.Bait.ToString() );
+        pointText.text = string.Format("X{0}", fishGameManager.Point.ToString());
+    }
+
+    void ChangeGameUI()
+    {
+        GameState state = fishGameManager.ReturnGameState();
+    
+        switch (state)
+        {
+            case GameState.ready:
+                gamePlayRect.gameObject.SetActive(false);
+                gameStartRect.gameObject.SetActive(true);
+                SetGameStartUI();
+                break;
+            case GameState.start:
+                gameStartRect.gameObject.SetActive(false);
+                gamePlayRect.gameObject.SetActive(true);
+                UpdateBaitAndPointUI();
+                break;
+            case GameState.end:
+                gamePlayRect.gameObject.SetActive(false);
+                gameStartRect.gameObject.SetActive(true);
+                gameStartBtn.enabled = false;
+                SetGameStartUI();
+                break;
+        }
     }
 }

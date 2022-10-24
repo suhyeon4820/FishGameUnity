@@ -202,7 +202,6 @@ GameObject:
   - component: {fileID: 169303536}
   - component: {fileID: 169303538}
   - component: {fileID: 169303537}
-  - component: {fileID: 169303539}
   m_Layer: 5
   m_Name: ResultRect
   m_TagString: Untagged
@@ -271,20 +270,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 169303535}
   m_CullTransparentMesh: 1
---- !u!114 &169303539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 169303535}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4aae29441ca40694f9ba2ba2760daddd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fishNameText: {fileID: 258826118}
-  fishPointText: {fileID: 1300429715}
 --- !u!1 &254523823
 GameObject:
   m_ObjectHideFlags: 0
@@ -373,7 +358,7 @@ GameObject:
   - component: {fileID: 258826119}
   - component: {fileID: 258826118}
   m_Layer: 5
-  m_Name: fishNameText
+  m_Name: itemNameText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -811,7 +796,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: X4
+  m_text: X5
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1668,7 +1653,7 @@ GameObject:
   - component: {fileID: 1300429716}
   - component: {fileID: 1300429715}
   m_Layer: 5
-  m_Name: fishPointText
+  m_Name: itemPointText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2428,7 +2413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 607a89472e189cd49b67ab7f3bcf4d3b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameResult: {fileID: 169303539}
+  fishGameManager: {fileID: 1826380237}
   gameStartRect: {fileID: 972072481}
   gameStartBtn: {fileID: 1281456510}
   startBaitText: {fileID: 455121405}
@@ -2438,6 +2423,8 @@ MonoBehaviour:
   baitText: {fileID: 890802696}
   pointText: {fileID: 452640028}
   resultRect: {fileID: 169303536}
+  itemNameText: {fileID: 258826118}
+  itemPointText: {fileID: 1300429715}
   okBtn: {fileID: 829283846}
 --- !u!114 &1826380237
 MonoBehaviour:
