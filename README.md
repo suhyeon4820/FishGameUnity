@@ -8,5 +8,5 @@
 
   - **FishItem** : 게임 아이템 오브젝트의 정보(종류, 획득 포인트, 획득 확률)를 다룸 
 
-    <img src = "https://github.com/suhyeon4820/FishGameUnity/tree/main/readmeImg">
+    <img src = "https://github.com/suhyeon4820/FishGameUnity/blob/main/readmeImg/designpattern.png">
 
