@@ -7,17 +7,16 @@ public enum GameState
 {
     ready,
     start,
-    end
 }
 
-public class FishGameManager : MonoBehaviour
+public class FishGameManager : MonoBehaviour 
 {
     GameState gameState = new GameState();
     List<FishItem> gameItemList = new List<FishItem>();
     public event Action<bool> onComboAction;
-    
+
     // 미끼 
-    int baitCount;
+    int baitCount = 5;
     public int Bait
     {
         get { return baitCount; }
@@ -26,7 +25,7 @@ public class FishGameManager : MonoBehaviour
             if(value == 0)
             {
                 baitCount = 0;
-                UpdateGgameState(GameState.end);
+                UpdateGgameState(GameState.ready);
             }
             else
             {
@@ -46,12 +45,9 @@ public class FishGameManager : MonoBehaviour
     {
         SetGameItemList();
     }
-    private void Start()
-    {
-        UpdateGgameState(GameState.ready);
-    }
 
-    // UIFishGame에서 호출
+
+    #region // 물고기 잡기
     public void StartFishing(Action<FishItem> onFish)
     {
         // 1. 미끼 감소
@@ -60,7 +56,7 @@ public class FishGameManager : MonoBehaviour
         FishItem randomItem = ReturnRandomItem();
         // 3. 아이템 포인트 계산(3콤보 포함) 및 적용
         int randomItemPoint = CalRandomItemPoint(randomItem);
-        
+
         onFish(randomItem);
     }
 
@@ -68,7 +64,7 @@ public class FishGameManager : MonoBehaviour
     int CalRandomItemPoint(FishItem fishingRandomItem)
     {
         // 포인트 가져오기
-        fishingRandomItem.SetPoint();
+        //fishingRandomItem.SetPoint();
         int currentPoint = fishingRandomItem.randomPoint;
 
         // 3콤보 카운트
@@ -105,7 +101,7 @@ public class FishGameManager : MonoBehaviour
     // 랜덤으로 게임 아이템 리턴(물고기, 젤리, 리사이클 중 1개)
     FishItem ReturnRandomItem()
     {
-        FishItem randomItem = null; 
+        FishItem randomItem = null;
 
         // 가중치    : 물고기1(5%) | 물고기2(10%) | 물고기3(20%) | 물고기4(40%) | 젤리(10%) | 재활용1(5%) | 재활용2(5%) | 재활용3(5%) | 
         // 가중치 합 : 물고기1(5%) | 물고기2(15%) | 물고기3(35%) | 물고기4(75%) | 젤리(85%) | 재활용1(90%) | 재활용2(95%) | 재활용3(100%) |
@@ -127,13 +123,34 @@ public class FishGameManager : MonoBehaviour
 
         return randomItem;
     }
+    #endregion
 
-    public void RewardRecycleItem()
+    #region // 상점 - 미끼 구매
+    public void PurchaseBait(int baitCount, Action onPurchase)
     {
-        Recycle--;      // 수량 감소
-        Point += 10;    // 10 포인트 획득
+        int baitAmount = baitCount * 50;
+        if(Point >= baitAmount)
+        {
+            Bait += baitCount;
+            Point -= baitAmount;
+            onPurchase?.Invoke();
+        }
     }
 
+    #endregion
+
+    #region // 재활용
+    public void RewardRecycleItem()
+    {
+        if (Recycle != 0)
+        {
+            Recycle--;      // 수량 감소
+            Point += 10;    // 10 포인트 획득
+        }
+    }
+    #endregion
+
+    #region // gamestate
     public void UpdateGgameState(GameState state)
     {
         gameState = state;
@@ -146,44 +163,38 @@ public class FishGameManager : MonoBehaviour
             case GameState.start:
                 OnGameStateStart();
                 break;
-            case GameState.end:
-                OnGameStateEnd();
-                break;
         }
     }
 
     void OnGameStateReady()
     {
-        baitCount = 5;
+
     }
 
     void OnGameStateStart()
     {
-        baitCount = 5;
-        Point = 0;
+        comboCount = 0;
     }
 
-    void OnGameStateEnd()
-    {
-        baitCount = 0;
-    }
 
     public GameState ReturnGameState()
     {
         return gameState;
     }
+    #endregion
+
 
     void SetGameItemList()
     {
         // 생성한 아이템 인스턴스 리스트화
-        FishItem fishItem1 = new FishItem(FishItemType.fish,    "Fish1",    5, 100, 100, 0);
-        FishItem fishItem2 = new FishItem(FishItemType.fish,    "Fish2",   10,  45,  60, 1);
-        FishItem fishItem3 = new FishItem(FishItemType.fish,    "Fish3",   20,  24,  40, 2);
-        FishItem fishItem4 = new FishItem(FishItemType.fish,    "Fish4",   40,   5,  20, 3);
-        FishItem jelly     = new FishItem(FishItemType.jelly,   "Jelly",   10,  50,  50, 4);
-        FishItem recycle1  = new FishItem(FishItemType.recycle, "recycle1", 5,  10,  10, 5);
-        FishItem recycle2  = new FishItem(FishItemType.recycle, "recycle2", 5,  10,  10, 6);
-        FishItem recycle3  = new FishItem(FishItemType.recycle, "recycle3", 5,  10,  10, 7);
+        FishItem fishItem1 = new FishItem(FishItemType.fish,    "Fish1",    5, 100, 0, false);
+        FishItem fishItem2 = new FishItem(FishItemType.fish,    "Fish2",   10,  40, 1, true);
+        FishItem fishItem3 = new FishItem(FishItemType.fish,    "Fish3",   20,  20, 2, true);
+        FishItem fishItem4 = new FishItem(FishItemType.fish,    "Fish4",   40,   0, 3, true);
+        FishItem jelly     = new FishItem(FishItemType.jelly,   "Jelly",   10,  50,  4, false);
+        FishItem recycle1  = new FishItem(FishItemType.recycle, "recycle1", 5,  10,  5, false);
+        FishItem recycle2  = new FishItem(FishItemType.recycle, "recycle2", 5,  10,  6, false);
+        FishItem recycle3  = new FishItem(FishItemType.recycle, "recycle3", 5,  10,  7, false);
 
         List<FishItem> tempItemList = new List<FishItem>();
         tempItemList.Add(fishItem1);

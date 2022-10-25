@@ -5,52 +5,72 @@ using UnityEngine.UI;
 using TMPro;
 public class UIFishGame : MonoBehaviour
 {
-    [SerializeField] private FishGameManager fishGameManager;
+    [SerializeField] FishGameManager fishGameManager;
+
+    [Header("Menu")]
+    [SerializeField] Button storeBtn;
+
+
     [Header("GameStart")]
-    [SerializeField] private RectTransform gameStartRect;
-    [SerializeField] private Button gameStartBtn;
-    [SerializeField] private TMP_Text startBaitText;
+    [SerializeField] RectTransform gameStartRect;
+    [SerializeField] Button gameStartBtn;
 
     [Header("GamePlay")]
-    [SerializeField] private RectTransform gamePlayRect;
-    [SerializeField] private Button castBtn;
-    [SerializeField] private Button gameExitBtn;
-    [SerializeField] private Button rewardBtn;
-    [SerializeField] private TMP_Text baitText;
-    [SerializeField] private TMP_Text pointText;
-    [SerializeField] private TMP_Text recycleText;
+    [SerializeField] RectTransform gamePlayRect;
+    [SerializeField] Button castBtn;
+    [SerializeField] Button gameExitBtn;
+    [SerializeField] Button rewardBtn;
+    [SerializeField] TMP_Text baitText;
+    [SerializeField] TMP_Text pointText;
+    [SerializeField] TMP_Text recycleText;
 
     [Header("Result")]
-    [SerializeField] private RectTransform resultRect;
+    [SerializeField] RectTransform resultRect;
     [SerializeField] Image itemImage;
     [SerializeField] Sprite[] itemImages;
     [SerializeField] Image comboImage;
-    [SerializeField] private TMP_Text itemNameText;
-    [SerializeField] private TMP_Text itemPointText;
-    [SerializeField] private Button okBtn;
+    [SerializeField] TMP_Text itemNameText;
+    [SerializeField] TMP_Text itemPointText;
+    [SerializeField] Button okBtn;
+
+    [Header("Store")]
+    [SerializeField] RectTransform storeRect;
+    [SerializeField] Button upBtn;
+    [SerializeField] Button downBtn;
+    [SerializeField] Button purchaseBtn;
+    [SerializeField] Button cancleBtn;
+    [SerializeField] TMP_Text addedBaitCountText;
+    [SerializeField] TMP_Text warningText;
+    int addedBaitCount = 0;
 
     void Start()
     {
         SetBtnListener();
+        SetStoreBtnListener();
         fishGameManager.onComboAction += ShowComboEffect;   // action
+
+        fishGameManager.UpdateGgameState(GameState.ready);
+        UpdateGameUIByGameState();
     }
 
+    #region // fishing
     void SetBtnListener()
     {
         // 게임시작 버튼
-        gameStartBtn.onClick.AddListener(() => 
+        gameStartBtn.onClick.AddListener(() =>
         {
             fishGameManager.UpdateGgameState(GameState.start);
-            ChangeGameUI();
+            UpdateGameUIByGameState();
         });
 
         // 게임 종료 버튼
         gameExitBtn.onClick.AddListener(() =>
         {
-            Destroy(gameObject);
+            fishGameManager.UpdateGgameState(GameState.ready);
+            UpdateGameUIByGameState();
         });
 
-        // 캐스트 버튼
+        // 캐스트 버튼 
         castBtn.onClick.AddListener(OnClickCastBtn);
 
         // 리사이클 보상 버튼
@@ -67,47 +87,95 @@ public class UIFishGame : MonoBehaviour
         resultRect.gameObject.SetActive(true);
 
         // 랜덤 아이템 생성
-        fishGameManager.StartFishing((fish)=>
+        fishGameManager.StartFishing((fish) =>
         {
             ShowItemResult(fish);
-        });  
-        
+        });
+
         okBtn.onClick.AddListener(() =>
         {
             castBtn.enabled = true;
             resultRect.gameObject.SetActive(false);
-            ChangeGameUI();
+            UpdateGameUIByGameState(); // bait 0일 때 화면 전환
         });
     }
 
-    void SetGameStartUI()
+    void ShowItemResult(FishItem item)
     {
-        startBaitText.text = fishGameManager.Bait.ToString();
-    }
-
-    void ShowItemResult(FishItem fish)
-    {
-        itemNameText.text = fish.name;   
-        itemImage.sprite = itemImages[fish.imageIndex];
+        itemNameText.text = item.name;
+        itemImage.sprite = itemImages[item.imageIndex];
 
         // 리사이클일 경우 포인트 대신 eco 작성
-        if(fish.type == FishItemType.recycle)
+        if (item.type == FishItemType.recycle)
         {
             itemPointText.text = "eco";
             UpdateRecycleAndPointUI();
         }
         else
         {
-            itemPointText.text = fish.randomPoint.ToString();
+            itemPointText.text = item.randomPoint.ToString();
         }
-            
         UpdateBaitAndPointUI();
     }
+    #endregion
+
+    #region // store
+    void SetStoreBtnListener()
+    {
+        // 상점 버튼 - 초기화
+        storeBtn.onClick.AddListener(() =>
+        {
+            addedBaitCount = 0;
+            addedBaitCountText.text = addedBaitCount.ToString();
+            warningText.gameObject.SetActive(false);
+            storeRect.gameObject.SetActive(true);
+        });
+        // 수량 증가
+        upBtn.onClick.AddListener(() =>
+        {
+            OnClickAddOrMinusBaitCount(1);
+        });
+        // 수량 감소
+        downBtn.onClick.AddListener(() =>
+        {
+            OnClickAddOrMinusBaitCount(-1);
+        });
+        // 구매하기
+        purchaseBtn.onClick.AddListener(() =>
+        {
+            fishGameManager.PurchaseBait(addedBaitCount, () =>
+            {
+                storeRect.gameObject.SetActive(false);
+                UpdateGameUIByGameState();
+            });
+            warningText.gameObject.SetActive(true); // 포인트 없을 때 경고표시
+            
+        });
+        // store창 비활성화
+        cancleBtn.onClick.AddListener(() =>
+        {
+            storeRect.gameObject.SetActive(false);
+        });
+    }
+
+    void OnClickAddOrMinusBaitCount(int num)
+    {
+        addedBaitCount += num;
+
+        if (addedBaitCount <= 0)
+            addedBaitCount = 0;
+
+        addedBaitCountText.text = addedBaitCount.ToString();
+    }
+
+    #endregion
+
+    #region // updateUI
 
     void UpdateBaitAndPointUI()
     {
         // 남은 미끼, 총 포인트 표시
-        baitText.text = string.Format("X{0}", fishGameManager.Bait.ToString() );
+        baitText.text = string.Format("X{0}", fishGameManager.Bait.ToString());
         pointText.text = string.Format("X{0}", fishGameManager.Point.ToString());
     }
 
@@ -123,28 +191,29 @@ public class UIFishGame : MonoBehaviour
         comboImage.gameObject.SetActive(isTrue);
     }
 
-    void ChangeGameUI()
+    void UpdateGameUIByGameState()
     {
         GameState state = fishGameManager.ReturnGameState();
-    
+
         switch (state)
         {
             case GameState.ready:
                 gamePlayRect.gameObject.SetActive(false);
                 gameStartRect.gameObject.SetActive(true);
-                SetGameStartUI();
+                // 미끼 0일 때 시작버튼 비활성화
+                if(fishGameManager.Bait == 0)
+                    gameStartBtn.enabled = false;
+                else
+                    gameStartBtn.enabled = true;
+
                 break;
             case GameState.start:
                 gameStartRect.gameObject.SetActive(false);
                 gamePlayRect.gameObject.SetActive(true);
-                UpdateBaitAndPointUI();
-                break;
-            case GameState.end:
-                gamePlayRect.gameObject.SetActive(false);
-                gameStartRect.gameObject.SetActive(true);
-                gameStartBtn.enabled = false;
-                SetGameStartUI();
                 break;
         }
+
+        UpdateBaitAndPointUI();
     }
+    #endregion
 }
