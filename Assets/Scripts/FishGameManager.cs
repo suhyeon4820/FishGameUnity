@@ -64,7 +64,7 @@ public class FishGameManager : MonoBehaviour
     int CalRandomItemPoint(FishItem fishingRandomItem)
     {
         // 포인트 가져오기
-        //fishingRandomItem.SetPoint();
+        fishingRandomItem.SetPoint();
         int currentPoint = fishingRandomItem.randomPoint;
 
         // 3콤보 카운트
@@ -187,14 +187,15 @@ public class FishGameManager : MonoBehaviour
     void SetGameItemList()
     {
         // 생성한 아이템 인스턴스 리스트화
-        FishItem fishItem1 = new FishItem(FishItemType.fish,    "Fish1",    5, 100, 0, false);
-        FishItem fishItem2 = new FishItem(FishItemType.fish,    "Fish2",   10,  40, 1, true);
-        FishItem fishItem3 = new FishItem(FishItemType.fish,    "Fish3",   20,  20, 2, true);
-        FishItem fishItem4 = new FishItem(FishItemType.fish,    "Fish4",   40,   0, 3, true);
-        FishItem jelly     = new FishItem(FishItemType.jelly,   "Jelly",   10,  50, 4, false);
-        FishItem recycle1  = new FishItem(FishItemType.recycle, "recycle1", 5,  10, 5, false);
-        FishItem recycle2  = new FishItem(FishItemType.recycle, "recycle2", 5,  10, 6, false);
-        FishItem recycle3  = new FishItem(FishItemType.recycle, "recycle3", 5,  10, 7, false);
+        // 종류, 이름, 가중치, 최소포인트, 최대포인트, 이미지인덱스
+        FishItem fishItem1 = new FishItem(FishItemType.fish,    "Fish1",    5,  100,  100, 0);
+        FishItem fishItem2 = new FishItem(FishItemType.fish,    "Fish2",   10,   45,   60, 1);
+        FishItem fishItem3 = new FishItem(FishItemType.fish,    "Fish3",   20,   25,   40, 2);
+        FishItem fishItem4 = new FishItem(FishItemType.fish,    "Fish4",   40,    5,   20, 3);
+        FishItem jelly     = new FishItem(FishItemType.jelly,   "Jelly",   10, 1000, 1000, 4);
+        FishItem recycle1  = new FishItem(FishItemType.recycle, "recycle1", 5,   10,   10, 5);
+        FishItem recycle2  = new FishItem(FishItemType.recycle, "recycle2", 5,   10,   10, 6);
+        FishItem recycle3  = new FishItem(FishItemType.recycle, "recycle3", 5,   10,   10, 7);
 
         List<FishItem> tempItemList = new List<FishItem>();
         tempItemList.Add(fishItem1);
