@@ -109,10 +109,8 @@ public class FishGameManager : MonoBehaviour
 
         // 가중치 랜덤 뽑기 - 각각의 요소가 뽑힐 확률 : (가중치) / (전체 가중치 합)
         int weight = 0;
-        //int selectNum = UnityEngine.Random.Range(1, 101); // 1 ~ 100
-        System.Random random = new System.Random(); // system random 객체 생성
-        int selectNum = random.Next(0, 100);    // 1 ~ 100
-
+        int selectNum = UnityEngine.Random.Range(1, 101); // 1 ~ 100
+    
         for (int i = 0; i < randomItemList.Count; i++)
         {
             weight += randomItemList[i].rate; // 가중치 합
