@@ -149,8 +149,8 @@ public class UIFishGame : MonoBehaviour
                 UpdateGameUIByGameState();
             });
             warningText.gameObject.SetActive(true); // 포인트 없을 때 경고표시
-            
         });
+
         // store창 비활성화
         cancleBtn.onClick.AddListener(() =>
         {

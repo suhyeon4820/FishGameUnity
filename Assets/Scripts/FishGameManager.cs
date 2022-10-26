@@ -93,7 +93,7 @@ public class FishGameManager : MonoBehaviour
         }
         Point += currentPoint;   // 포인트 적용
 
-        Debug.Log("currentPoint : " + currentPoint + ", totalPoint : " + Point); // 포인트 확인용
+        Debug.Log( fishingRandomItem.name + " == currentPoint : " + currentPoint + ", totalPoint : " + Point); // 포인트 확인용
 
         return currentPoint;
     }
@@ -109,7 +109,9 @@ public class FishGameManager : MonoBehaviour
 
         // 가중치 랜덤 뽑기 - 각각의 요소가 뽑힐 확률 : (가중치) / (전체 가중치 합)
         int weight = 0;
-        int selectNum = UnityEngine.Random.Range(1, 101); // 1 ~ 100
+        //int selectNum = UnityEngine.Random.Range(1, 101); // 1 ~ 100
+        System.Random random = new System.Random(); // system random 객체 생성
+        int selectNum = random.Next(0, 100);    // 1 ~ 100
 
         for (int i = 0; i < randomItemList.Count; i++)
         {
@@ -191,10 +193,10 @@ public class FishGameManager : MonoBehaviour
         FishItem fishItem2 = new FishItem(FishItemType.fish,    "Fish2",   10,  40, 1, true);
         FishItem fishItem3 = new FishItem(FishItemType.fish,    "Fish3",   20,  20, 2, true);
         FishItem fishItem4 = new FishItem(FishItemType.fish,    "Fish4",   40,   0, 3, true);
-        FishItem jelly     = new FishItem(FishItemType.jelly,   "Jelly",   10,  50,  4, false);
-        FishItem recycle1  = new FishItem(FishItemType.recycle, "recycle1", 5,  10,  5, false);
-        FishItem recycle2  = new FishItem(FishItemType.recycle, "recycle2", 5,  10,  6, false);
-        FishItem recycle3  = new FishItem(FishItemType.recycle, "recycle3", 5,  10,  7, false);
+        FishItem jelly     = new FishItem(FishItemType.jelly,   "Jelly",   10,  50, 4, false);
+        FishItem recycle1  = new FishItem(FishItemType.recycle, "recycle1", 5,  10, 5, false);
+        FishItem recycle2  = new FishItem(FishItemType.recycle, "recycle2", 5,  10, 6, false);
+        FishItem recycle3  = new FishItem(FishItemType.recycle, "recycle3", 5,  10, 7, false);
 
         List<FishItem> tempItemList = new List<FishItem>();
         tempItemList.Add(fishItem1);
