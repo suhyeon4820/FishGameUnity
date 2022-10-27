@@ -199,12 +199,12 @@ public class FishGameManager : MonoBehaviour
 
         List<FishItem> tempItemList = new List<FishItem>();
         tempItemList.Add(fishItem1);
-        tempItemList.Add(fishItem2);
         tempItemList.Add(fishItem3);
-        tempItemList.Add(fishItem4);
+        tempItemList.Add(recycle2);
+        tempItemList.Add(fishItem2);
         tempItemList.Add(jelly);
         tempItemList.Add(recycle1);
-        tempItemList.Add(recycle2);
+        tempItemList.Add(fishItem4);
         tempItemList.Add(recycle3);
 
         gameItemList = tempItemList;
